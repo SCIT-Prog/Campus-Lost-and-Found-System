@@ -1,0 +1,6 @@
+# These files are only meant to be included by the endpoints, never requested directly.
+<IfModule mod_authz_core.c>
+  <FilesMatch "^(config|bootstrap|mailer)\.php$">
+    Require all denied
+  </FilesMatch>
+</IfModule>

@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f4ef">
+    <meta name="description" content="A campus community hub for reporting and finding lost belongings.">
+    <title>Campus Lost &amp; Found</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23174a38'/%3E%3Cpath d='M7 14 16 8l9 6v10H7V14Z' fill='none' stroke='%23f4f0dc' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="brand" href="#/" aria-label="Campus Lost and Found home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M5 12.5 16 6l11 6.5v13H5v-13Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M11 25.5v-7h10v7M10 13h.01M16 13h.01M22 13h.01" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </span>
+        <span class="brand-copy"><strong>Campus</strong><span>LOST &amp; FOUND</span></span>
+      </a>
+      <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <a class="nav-link" href="#/" data-nav="public">Browse items</a>
+        <a class="nav-link" href="#/track" data-nav="track">Track my report</a>
+        <a class="nav-link" href="#/staff" data-nav="admin" id="staff-link" hidden>Dashboard</a>
+        <button class="button button-dark nav-report" type="button" data-open-report>Report an item <span aria-hidden="true">↗</span></button>
+      </nav>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="main-nav">☰</button>
+    </header>
+
+    <div class="notice" id="file-notice" role="alert" hidden>
+      This page was opened as a file. Serve it through Apache instead, for example <strong>http://localhost/campus-lost-found/</strong>, so PHP can run.
+    </div>
+
+    <main id="main" tabindex="-1">
+      <!-- ============ Public view ============ -->
+      <div id="view-public">
+        <section class="hero" id="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <div class="eyebrow"><span></span> CAMPUS SECURITY OFFICE <span class="eyebrow-divider">·</span> ADMIN BLDG, ROOM 104</div>
+            <h1 id="hero-title">Lost something?<br><span>Let’s bring it home.</span></h1>
+            <p class="hero-description">A little help from your campus community goes a long way. Search recent reports or let us know what you found.</p>
+            <div class="hero-actions">
+              <button class="button button-dark" type="button" data-open-report>Report an item <span aria-hidden="true">↗</span></button>
+              <a class="text-link" href="#items">Browse items <span aria-hidden="true">↓</span></a>
+            </div>
+            <div class="trust-note"><span class="trust-icon" aria-hidden="true">✓</span> Contact details are never shown on public listings.</div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="art-sun"></div>
+            <div class="art-hill art-hill-back"></div>
+            <div class="art-hill art-hill-front"></div>
+            <div class="art-card">
+              <span class="art-card-icon">✳</span>
+              <span class="art-card-label">GOOD THINGS<br>FIND THEIR WAY</span>
+              <span class="art-card-spark">✦</span>
+            </div>
+            <span class="art-star star-one">✳</span>
+            <span class="art-star star-two">✦</span>
+            <span class="art-scribble">a campus thing</span>
+          </div>
+        </section>
+
+        <section class="stats-strip" aria-label="Report summary">
+          <div class="stat"><span class="stat-number" id="stat-open">–</span><span class="stat-label">items looking for a home</span></div>
+          <span class="stat-separator" aria-hidden="true"></span>
+          <div class="stat"><span class="stat-number" id="stat-returned">–</span><span class="stat-label">items marked Found</span></div>
+          <span class="stat-separator" aria-hidden="true"></span>
+          <div class="stat stat-note"><span class="stat-spark" aria-hidden="true">✳</span><span class="stat-label">Small finds, big relief.</span></div>
+          <span class="stat-footnote">Community powered, campus cared.</span>
+        </section>
+
+        <section class="items-section" id="items" aria-labelledby="items-title">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow"><span></span> THE COMMUNITY BOARD</div>
+              <h2 id="items-title">Recently reported</h2>
+              <p>Every detail might be the clue that gets it back to you.</p>
+            </div>
+            <button class="button button-outline desktop-report" type="button" data-open-report>+ &nbsp;Add a report</button>
+          </div>
+
+          <div class="filter-bar" role="search">
+            <label class="search-box">
+              <span class="sr-only">Search reports</span>
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.7" cy="8.7" r="5.9" stroke="currentColor" stroke-width="1.5"/><path d="m13.2 13.2 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input id="search-input" type="search" placeholder="Search by item, place, or keyword" autocomplete="off">
+              <kbd aria-hidden="true">/</kbd>
+            </label>
+            <label class="select-label">
+              <span class="sr-only">Filter by report type</span>
+              <select id="type-filter">
+                <option value="all">All reports</option>
+                <option value="lost">Lost items</option>
+                <option value="found">Found items</option>
+              </select>
+            </label>
+            <label class="select-label">
+              <span class="sr-only">Filter by category</span>
+              <select id="category-filter">
+                <option value="all">All categories</option>
+                <option>Accessories</option>
+                <option>Bags</option>
+                <option>Books &amp; stationery</option>
+                <option>Clothing</option>
+                <option>Electronics</option>
+                <option>Keys &amp; cards</option>
+                <option>Water bottles</option>
+                <option>Other</option>
+              </select>
+            </label>
+          </div>
+          <div class="results-line">
+            <span id="results-count" role="status">Loading…</span>
+            <button class="link-button" id="clear-filters" type="button" hidden>Clear filters</button>
+          </div>
+          <div class="item-grid" id="item-grid" aria-busy="true"></div>
+          <div class="load-more-wrap"><button class="button button-outline" id="load-more" type="button" hidden>Show more</button></div>
+        </section>
+
+        <section class="help-strip">
+          <div class="help-symbol" aria-hidden="true">↗</div>
+          <div><strong>Need a hand?</strong><span>Visit Campus Security in Admin Building, Room 104.</span></div>
+          <span class="help-hours">Here to help, Monday–Friday</span>
+        </section>
+      </div>
+
+      <!-- ============ Track my report ============ -->
+      <div id="view-track" hidden>
+        <section class="track-panel" aria-labelledby="track-title">
+          <div class="eyebrow"><span></span> YOUR REPORT</div>
+          <h1 id="track-title">Track my report</h1>
+          <p class="muted">Enter the reference code you received when you submitted your report (it looks like <strong>LF-7KQ2M9XA</strong>).</p>
+          <form id="track-form" class="track-form" novalidate>
+            <label class="form-field">Reference code
+              <input name="ref" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="11" placeholder="LF-XXXXXXXX" required>
+            </label>
+            <button class="button button-dark" type="submit" id="track-submit">Check status</button>
+          </form>
+          <div class="form-error" id="track-error" role="alert" hidden></div>
+          <div id="track-result" hidden></div>
+          <div class="saved-refs" id="saved-refs" hidden>
+            <h2>Saved on this device</h2>
+            <ul id="saved-refs-list"></ul>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============ Staff view ============ -->
+      <div id="view-admin" hidden>
+        <section class="login-panel" id="admin-login" hidden aria-labelledby="login-title">
+          <h1 id="login-title">Sign in</h1>
+          <p class="muted">Authorized personnel only.</p>
+          <form id="login-form" novalidate>
+            <label class="form-field">Username
+              <input name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required maxlength="50">
+            </label>
+            <label class="form-field">Password
+              <input name="password" type="password" autocomplete="current-password" required maxlength="1024">
+            </label>
+            <div class="form-error" id="login-error" role="alert" hidden></div>
+            <button class="button button-dark" id="login-submit" type="submit">Sign in <span aria-hidden="true">↗</span></button>
+          </form>
+        </section>
+
+        <section class="admin-dashboard" id="admin-dashboard" hidden aria-labelledby="admin-title">
+          <div class="admin-heading">
+            <div>
+              <div class="eyebrow"><span></span> CAMPUS SECURITY OFFICE</div>
+              <h1 id="admin-title">Staff dashboard</h1>
+              <p class="muted">Track verified recoveries, spot campus trends, and manage reports and claims.</p>
+            </div>
+            <div class="admin-session">
+              <span class="muted">Signed in as <strong id="admin-username"></strong> <span class="role-badge" id="admin-role"></span></span>
+              <button class="button button-outline" id="logout-button" type="button">Sign out</button>
+            </div>
+          </div>
+          <div class="admin-summary">
+            <article class="summary-card"><span>AWAITING REVIEW</span><strong id="admin-pending">–</strong></article>
+            <article class="summary-card"><span>ON THE BOARD</span><strong id="admin-active">–</strong></article>
+            <article class="summary-card"><span>FOUND</span><strong id="admin-resolved">–</strong></article>
+            <article class="summary-card"><span>PENDING CLAIMS</span><strong id="admin-claims">–</strong></article>
+            <article class="summary-card"><span>OPEN MATCHES</span><strong id="admin-matches">–</strong></article>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="Dashboard sections">
+            <a class="tab" role="tab" href="#/staff/analytics" data-tab="analytics" id="analytics-tab" hidden>Analytics</a>
+            <a class="tab" role="tab" href="#/staff/lost" data-tab="lost">Lost items</a>
+            <a class="tab" role="tab" href="#/staff/found" data-tab="found">Found items</a>
+            <a class="tab" role="tab" href="#/staff/matches" data-tab="matches">Matches <span class="tab-count" id="tab-count-matches" hidden></span></a>
+            <a class="tab" role="tab" href="#/staff/claims" data-tab="claims">Claims <span class="tab-count" id="tab-count-claims" hidden></span></a>
+            <a class="tab" role="tab" href="#/staff/emails" data-tab="emails">Email notifications <span class="tab-count warn" id="tab-count-emails" hidden></span></a>
+          </div>
+
+          <!-- Administrator analytics -->
+          <div class="tab-panel analytics-panel" id="panel-analytics" role="tabpanel" hidden>
+            <div class="admin-list-heading analytics-heading">
+              <div><h2>Priority analytics</h2><p class="muted">Live insights from campus reports and completed matches.</p></div>
+              <div class="admin-tools">
+                <label class="select-label">
+                  <span class="sr-only">Analytics date range</span>
+                  <select id="analytics-period">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly (last 7 days)</option>
+                    <option value="monthly" selected>Monthly</option>
+                    <option value="semester">Semester (last 6 months)</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                </label>
+                <button class="button button-outline" id="analytics-refresh" type="button">Refresh analytics</button>
+              </div>
+            </div>
+            <p class="analytics-status" id="analytics-status" role="status" aria-live="polite"></p>
+            <section aria-labelledby="recovery-heading">
+              <div class="analytics-section-heading">
+                <div><span class="eyebrow"><span></span> PRIMARY KPI</span><h3 id="recovery-heading">Item recovery rate</h3></div>
+                <p id="analytics-range" class="muted"></p>
+              </div>
+              <div class="analytics-summary">
+                <article class="analytics-kpi analytics-kpi-primary"><span>RECOVERY RATE</span><strong id="analytics-rate">–</strong><small id="analytics-rate-note">Verified returns only</small></article>
+                <article class="analytics-kpi"><span>LOST REPORTS</span><strong id="analytics-lost">–</strong><small>Eligible reports in range</small></article>
+                <article class="analytics-kpi"><span>SUCCESSFULLY RECOVERED</span><strong id="analytics-recovered">–</strong><small>Linked match marked completed</small></article>
+                <article class="analytics-kpi"><span>UNRECOVERED</span><strong id="analytics-unrecovered">–</strong><small>Lost reports not yet completed</small></article>
+              </div>
+              <div class="analytics-comparison" id="analytics-comparison"></div>
+              <article class="analytics-card">
+                <div class="analytics-card-heading"><div><h4>Recovery performance over time</h4><p>Monthly report cohorts; a return counts only when a match is completed.</p></div></div>
+                <div id="recovery-trend" class="analytics-trend"></div>
+              </article>
+            </section>
+            <div class="analytics-grid">
+              <article class="analytics-card">
+                <div class="analytics-card-heading"><div><h3>Most frequently lost</h3><p>Top 10 categories, lost vs. found report counts.</p></div></div>
+                <div class="analytics-legend"><span><i class="legend-lost"></i>Lost</span><span><i class="legend-found"></i>Found</span></div>
+                <div id="category-chart" class="analytics-bars"></div>
+                <h4 class="analytics-subheading">Monthly lost-item category trends</h4>
+                <div id="category-trend" class="analytics-bars analytics-category-trend"></div>
+              </article>
+              <article class="analytics-card">
+                <div class="analytics-card-heading"><div><h3>Most reported locations</h3><p>Top 10 locations, with active unclaimed items and verified recovery.</p></div></div>
+                <div class="analytics-legend"><span><i class="legend-lost"></i>Lost</span><span><i class="legend-found"></i>Found</span></div>
+                <div id="location-chart" class="analytics-bars"></div>
+                <h4 class="analytics-subheading">Highest verified recovery rates</h4>
+                <ol id="location-recovery-rank" class="analytics-rank-list"></ol>
+                <h4 class="analytics-subheading">Most unclaimed found items</h4>
+                <ol id="unclaimed-location-rank" class="analytics-rank-list"></ol>
+              </article>
+            </div>
+            <article class="analytics-card analytics-insights">
+              <div class="analytics-card-heading"><div><h3>Actionable insights</h3><p>Generated from recorded reports and completed matches only.</p></div></div>
+              <ul id="analytics-insights"></ul>
+            </article>
+          </div>
+
+          <!-- Lost / found reports -->
+          <div class="tab-panel" id="panel-reports" role="tabpanel">
+            <div class="admin-list-heading">
+              <div><h2 id="reports-heading">Lost items</h2><p class="muted" id="reports-sub">Contact emails are visible only here.</p></div>
+              <div class="admin-tools">
+                <label class="search-box admin-search">
+                  <span class="sr-only">Search reports</span>
+                  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.7" cy="8.7" r="5.9" stroke="currentColor" stroke-width="1.5"/><path d="m13.2 13.2 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <input id="admin-search" type="search" placeholder="Search item, place, email, reference" autocomplete="off">
+                </label>
+                <label class="select-label">
+                  <span class="sr-only">Filter by status</span>
+                  <select id="admin-filter">
+                    <option value="all">All statuses</option>
+                    <option value="pending">Awaiting review</option>
+                    <option value="active">On the board</option>
+                    <option value="resolved">Found</option>
+                  </select>
+                </label>
+                <button class="button button-outline" id="admin-refresh" type="button">Refresh</button>
+              </div>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead><tr><th scope="col">Photo</th><th scope="col">Item</th><th scope="col">Location</th><th scope="col">Date</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead>
+                <tbody id="admin-table-body"></tbody>
+              </table>
+              <div class="admin-empty" id="admin-empty" hidden></div>
+            </div>
+          </div>
+
+          <!-- Matches -->
+          <div class="tab-panel" id="panel-matches" role="tabpanel" hidden>
+            <div class="admin-list-heading">
+              <div><h2>Matches</h2><p class="muted">Pair lost and found reports, assign staff and track follow-up.</p></div>
+              <div class="admin-tools">
+                <label class="select-label">
+                  <span class="sr-only">Filter matches</span>
+                  <select id="match-filter">
+                    <option value="all">All matches</option>
+                    <option value="mine">Assigned to me</option>
+                    <option value="unassigned">Unassigned</option>
+                    <option value="active">Not completed</option>
+                    <option value="completed">Completed</option>
+                    <option value="dismissed">Dismissed</option>
+                  </select>
+                </label>
+                <button class="button button-outline" type="button" id="new-match-button">+ New match</button>
+                <button class="button button-outline" type="button" id="matches-refresh">Refresh</button>
+              </div>
+            </div>
+            <div id="match-list" class="card-list"></div>
+            <div class="suggestions" id="suggestions-wrap">
+              <h3>Suggested matches</h3>
+              <p class="muted">Open lost and found reports that look alike and are not matched yet.</p>
+              <div id="suggestion-list" class="card-list"></div>
+            </div>
+          </div>
+
+          <!-- Claims -->
+          <div class="tab-panel" id="panel-claims" role="tabpanel" hidden>
+            <div class="admin-list-heading">
+              <div><h2>Claims</h2><p class="muted">Ownership claims submitted for found items. New claims start as Pending.</p></div>
+              <div class="admin-tools">
+                <div class="chip-group" role="group" aria-label="Filter claims by status" id="claim-filter">
+                  <button class="chip" type="button" data-claim-filter="pending" aria-pressed="true">Pending <span id="claim-count-pending">0</span></button>
+                  <button class="chip" type="button" data-claim-filter="approved" aria-pressed="false">Approved <span id="claim-count-approved">0</span></button>
+                  <button class="chip" type="button" data-claim-filter="rejected" aria-pressed="false">Rejected <span id="claim-count-rejected">0</span></button>
+                  <button class="chip" type="button" data-claim-filter="all" aria-pressed="false">All</button>
+                </div>
+                <button class="button button-outline" type="button" id="claims-refresh">Refresh</button>
+              </div>
+            </div>
+            <div id="claim-list" class="card-list"></div>
+          </div>
+
+          <!-- Email notifications -->
+          <div class="tab-panel" id="panel-emails" role="tabpanel" hidden>
+            <div class="mail-status" id="mail-status"></div>
+            <form class="test-mail" id="test-mail-form" hidden novalidate>
+              <label class="form-field">Send a test email to
+                <input name="to" type="email" maxlength="120" placeholder="you@example.com" autocomplete="email" required>
+              </label>
+              <button class="button button-outline" type="submit">Send test</button>
+            </form>
+            <div class="admin-list-heading">
+              <div><h2>Email notification history</h2><p class="muted" id="email-counts">Every email the system sends, with its delivery result.</p></div>
+              <div class="admin-tools">
+                <label class="search-box admin-search">
+                  <span class="sr-only">Search emails</span>
+                  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.7" cy="8.7" r="5.9" stroke="currentColor" stroke-width="1.5"/><path d="m13.2 13.2 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <input id="email-search" type="search" placeholder="Search recipient, subject, item" autocomplete="off">
+                </label>
+                <label class="select-label">
+                  <span class="sr-only">Filter by delivery status</span>
+                  <select id="email-status-filter">
+                    <option value="all">Sent and failed</option>
+                    <option value="sent">Sent</option>
+                    <option value="failed">Failed</option>
+                  </select>
+                </label>
+                <label class="select-label">
+                  <span class="sr-only">Filter by email type</span>
+                  <select id="email-type-filter"><option value="all">All types</option></select>
+                </label>
+                <button class="button button-outline" type="button" id="emails-refresh">Refresh</button>
+              </div>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead><tr><th scope="col">Sent</th><th scope="col">Recipient</th><th scope="col">Subject</th><th scope="col">Type</th><th scope="col">Delivery</th><th scope="col">Actions</th></tr></thead>
+                <tbody id="email-table-body"></tbody>
+              </table>
+              <div class="admin-empty" id="email-empty" hidden></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <a class="footer-brand" href="#/">Campus <span>Lost &amp; Found</span></a>
+      <span>Made for a campus that looks out for each other.</span>
+      <span>Campus Security · Admin Bldg, Room 104</span>
+    </footer>
+
+    <dialog class="report-dialog" id="report-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-body">
+        <form id="report-form" novalidate>
+          <div class="dialog-topline"><span class="eyebrow"><span></span> COMMUNITY BOARD</span><button class="dialog-close" type="button" aria-label="Close report form" data-close-dialog>×</button></div>
+          <h2 id="dialog-title">Report an item</h2>
+          <p class="dialog-intro">The more details you share, the easier it is to make a connection.</p>
+          <div class="form-row">
+            <label class="form-field">I want to
+              <select name="type" required>
+                <option value="lost">Report something lost</option>
+                <option value="found">Report something found</option>
+              </select>
+              <span class="field-error" data-error-for="type" hidden></span>
+            </label>
+            <label class="form-field">Category
+              <select name="category" required>
+                <option value="Accessories">Accessories</option>
+                <option value="Bags">Bags</option>
+                <option value="Books &amp; stationery">Books &amp; stationery</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Keys &amp; cards">Keys &amp; cards</option>
+                <option value="Water bottles">Water bottles</option>
+                <option value="Other">Other</option>
+              </select>
+              <span class="field-error" data-error-for="category" hidden></span>
+            </label>
+          </div>
+          <label class="form-field">What is it? <span class="required-mark" aria-hidden="true">*</span>
+            <input name="title" required maxlength="70" placeholder="e.g. Green canvas tote bag" autocomplete="off">
+            <span class="field-error" data-error-for="title" hidden></span>
+          </label>
+          <div class="form-row">
+            <label class="form-field">Where was it last seen or found? <span class="required-mark" aria-hidden="true">*</span>
+              <input name="location" required maxlength="90" placeholder="e.g. Library, second floor" autocomplete="off">
+              <span class="field-error" data-error-for="location" hidden></span>
+            </label>
+            <label class="form-field">Date <span class="required-mark" aria-hidden="true">*</span>
+              <input name="date" type="date" required>
+              <span class="field-error" data-error-for="date" hidden></span>
+            </label>
+          </div>
+          <label class="form-field">A few more details <span class="optional-mark">OPTIONAL</span>
+            <textarea name="description" rows="3" maxlength="500" placeholder="Color, identifying details, or anything else that might help."></textarea>
+            <span class="char-count" id="description-count" aria-hidden="true">0 / 500</span>
+            <span class="field-error" data-error-for="description" hidden></span>
+          </label>
+          <div class="form-field photo-field">
+            <span>Photo <span class="optional-mark">OPTIONAL</span></span>
+            <div class="photo-picker">
+              <img class="photo-preview" id="photo-preview" alt="Selected photo" hidden>
+              <label class="button button-outline photo-choose">
+                <span id="photo-choose-label">Add a photo</span>
+                <input class="visually-hidden-input" name="photo" id="photo-input" type="file" accept="image/jpeg,image/png,image/webp,image/*">
+              </label>
+              <button class="link-button" type="button" id="photo-remove" hidden>Remove photo</button>
+            </div>
+            <span class="field-hint">JPG, PNG or WebP. Large photos are resized automatically.</span>
+            <span class="field-error" data-error-for="photo" hidden></span>
+          </div>
+          <label class="form-field">Your contact email <span class="optional-mark">RECOMMENDED</span>
+            <input name="contact" type="email" maxlength="120" placeholder="We’ll email you status updates" autocomplete="email">
+            <span class="field-error" data-error-for="contact" hidden></span>
+          </label>
+          <!-- Honeypot: hidden from people, tempting to bots. -->
+          <div class="hp-field" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+          <p class="privacy-note"><span aria-hidden="true">◎</span> Your email is only visible to Campus Security staff and is used to send you updates when your report’s status changes. It is never shown on the public board. New reports appear on the board after staff review them.</p>
+          <div class="form-error" id="form-error" role="alert" hidden></div>
+          <div class="dialog-actions">
+            <button class="button button-quiet" type="button" data-close-dialog>Cancel</button>
+            <button class="button button-dark" id="report-submit" type="submit">Submit report <span aria-hidden="true">↗</span></button>
+          </div>
+        </form>
+
+        <div class="report-success" id="report-success" hidden>
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <h2 id="success-title" tabindex="-1">Thank you, report received</h2>
+          <p>Campus Security will review it shortly. Save your reference so you can check its status later.</p>
+          <div class="reference-box">
+            <span class="reference-label">Your reference code</span>
+            <strong class="reference-code" id="success-ref"></strong>
+            <img class="reference-preview" id="reference-preview" alt="Reference card for your report. On a phone, press and hold to save it." hidden>
+            <div class="reference-actions">
+              <button class="button button-dark" type="button" id="ref-download">Save reference image</button>
+              <button class="button button-outline" type="button" id="ref-share" hidden>Share / Save to Photos</button>
+              <button class="button button-quiet" type="button" id="ref-copy">Copy code</button>
+            </div>
+            <p class="field-hint" id="success-email-note"></p>
+          </div>
+          <div class="dialog-actions">
+            <button class="button button-quiet" type="button" id="report-another">Report another item</button>
+            <button class="button button-dark" type="button" data-close-dialog>Done</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="confirm-dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+      <form method="dialog" class="dialog-body">
+        <h2 id="confirm-title">Delete this report?</h2>
+        <p id="confirm-message"></p>
+        <div class="dialog-actions">
+          <button class="button button-quiet" type="submit" value="cancel">Cancel</button>
+          <button class="button button-danger" type="submit" value="confirm" id="confirm-ok">Delete</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Image viewer -->
+    <dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+      <div class="lightbox-toolbar">
+        <span class="lightbox-caption" id="lightbox-caption"></span>
+        <div class="lightbox-buttons">
+          <button type="button" class="lb-button" id="lb-zoom-out" aria-label="Zoom out">−</button>
+          <span class="lb-zoom" id="lb-zoom" aria-live="polite">100%</span>
+          <button type="button" class="lb-button" id="lb-zoom-in" aria-label="Zoom in">+</button>
+          <button type="button" class="lb-button lb-text" id="lb-reset">Fit</button>
+          <a class="lb-button lb-text" id="lb-open" target="_blank" rel="noopener">Open</a>
+          <button type="button" class="lb-button" id="lb-close" aria-label="Close image viewer">×</button>
+        </div>
+      </div>
+      <div class="lightbox-stage" id="lightbox-stage">
+        <img id="lightbox-img" alt="" draggable="false">
+      </div>
+      <p class="lightbox-hint">Scroll, pinch or double-tap to zoom. Drag to move.</p>
+    </dialog>
+
+    <!-- Claim an item (public) -->
+    <dialog class="report-dialog" id="claim-dialog" aria-labelledby="claim-title">
+      <div class="dialog-body">
+        <form id="claim-form" novalidate>
+          <div class="dialog-topline"><span class="eyebrow"><span></span> CLAIM AN ITEM</span><button class="dialog-close" type="button" aria-label="Close claim form" data-close>×</button></div>
+          <h2 id="claim-title">Is this yours?</h2>
+          <div class="claim-item" id="claim-item"></div>
+          <p class="dialog-intro">Tell us something only the owner would know. Staff will check it before releasing the item, and we’ll email you the result.</p>
+          <input type="hidden" name="reportId">
+          <div class="form-row">
+            <label class="form-field">Full name <span class="required-mark" aria-hidden="true">*</span>
+              <input name="name" maxlength="80" autocomplete="name" required>
+              <span class="field-error" data-error-for="name" hidden></span>
+            </label>
+            <label class="form-field">Phone <span class="optional-mark">OPTIONAL</span>
+              <input name="phone" type="tel" maxlength="30" autocomplete="tel">
+              <span class="field-error" data-error-for="phone" hidden></span>
+            </label>
+          </div>
+          <label class="form-field">Email <span class="required-mark" aria-hidden="true">*</span>
+            <input name="email" type="email" maxlength="120" autocomplete="email" required>
+            <span class="field-error" data-error-for="email" hidden></span>
+          </label>
+          <label class="form-field">Proof of ownership <span class="required-mark" aria-hidden="true">*</span>
+            <textarea name="proof" rows="4" maxlength="1000" placeholder="e.g. what is inside it, unique marks or stickers, serial number, lock screen photo…" required></textarea>
+            <span class="char-count" id="proof-count" aria-hidden="true">0 / 1000</span>
+            <span class="field-error" data-error-for="proof" hidden></span>
+          </label>
+          <div class="form-field photo-field">
+            <span>Supporting photo <span class="optional-mark">OPTIONAL</span></span>
+            <div class="photo-picker">
+              <img class="photo-preview" id="claim-photo-preview" alt="Selected photo" hidden>
+              <label class="button button-outline photo-choose">
+                <span>Add a photo</span>
+                <input class="visually-hidden-input" name="photo" id="claim-photo-input" type="file" accept="image/jpeg,image/png,image/webp,image/*">
+              </label>
+              <button class="link-button" type="button" id="claim-photo-remove" hidden>Remove photo</button>
+            </div>
+            <span class="field-hint">For example, an older photo of you with the item, or a receipt.</span>
+            <span class="field-error" data-error-for="photo" hidden></span>
+          </div>
+          <div class="hp-field" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+          <div class="form-error" id="claim-error" role="alert" hidden></div>
+          <div class="dialog-actions">
+            <button class="button button-quiet" type="button" data-close>Cancel</button>
+            <button class="button button-dark" id="claim-submit" type="submit">Submit claim</button>
+          </div>
+        </form>
+        <div class="report-success" id="claim-success" hidden>
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <h2 id="claim-success-title" tabindex="-1">Claim submitted</h2>
+          <p>Your claim is <strong>Pending</strong>. We’ll email you when staff approve or reject it.</p>
+          <div class="reference-box"><span class="reference-label">Claim reference</span><strong class="reference-code" id="claim-ref"></strong></div>
+          <div class="dialog-actions"><button class="button button-dark" type="button" data-close>Done</button></div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Staff: generic dialog shell filled by app.js (details, send email, review claim, new match, email detail) -->
+    <dialog class="report-dialog staff-dialog" id="staff-dialog" aria-labelledby="staff-dialog-title">
+      <div class="dialog-body">
+        <div class="dialog-topline"><span class="eyebrow" id="staff-dialog-eyebrow"><span></span> STAFF</span><button class="dialog-close" type="button" aria-label="Close" data-close>×</button></div>
+        <h2 id="staff-dialog-title"></h2>
+        <div id="staff-dialog-content"></div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

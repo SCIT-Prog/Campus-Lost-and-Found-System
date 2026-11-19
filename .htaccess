@@ -1,0 +1,16 @@
+# Apache settings for XAMPP. Needs mod_headers (enabled by default in XAMPP).
+Options -Indexes
+
+<IfModule mod_authz_core.c>
+  # Never serve the schema, docs or hidden files.
+  <FilesMatch "(\.sql|\.md|\.htaccess)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "same-origin"
+  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+</IfModule>
